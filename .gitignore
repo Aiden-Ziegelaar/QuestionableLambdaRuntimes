@@ -1,0 +1,41 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.tfstate.lock.info
+.terraformrc
+terraform.rc
+
+# Rust
+debug/
+target/
+**/*.rs.bk
+*.pdb
+
+# EmojiLang
+*.hi
+*.o
+*.ll
+.stack-work
+dist-newstyle
+
+# COBOL
+**/bin
+*.h
+*.o
+*.a
+*.c.h
+*.c.l.h
+*.~lock*
+*.swp
+
+# Apple 
+.DS_Store
