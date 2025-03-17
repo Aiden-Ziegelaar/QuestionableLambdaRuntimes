@@ -28,7 +28,6 @@ target/
 dist-newstyle
 
 # COBOL
-**/bin
 *.h
 *.o
 *.a
@@ -39,3 +38,30 @@ dist-newstyle
 
 # Apple 
 .DS_Store
+
+# OCaml
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+
+_build/
+
+*.byte
+*.native
+
+setup.data
+setup.log
+
+.merlin
+
+*.install
+
+_opam/
+
+dist

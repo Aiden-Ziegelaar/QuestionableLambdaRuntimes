@@ -1,0 +1,4 @@
+(executable
+ (public_name UnifiedRuntime)
+ (name main)
+ (libraries UnifiedRuntime cohttp-lwt-unix yojson))
