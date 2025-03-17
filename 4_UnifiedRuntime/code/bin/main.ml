@@ -11,9 +11,8 @@ let get_next_invocation () =
   Cohttp_lwt.Body.to_string body >>= fun body_str ->
   let headers = Cohttp.Response.headers resp in
   let body_json = Yojson.Safe.from_string body_str in
-  let payload = Yojson.Safe.Util.member "payload" body_json in 
   match Cohttp.Header.get headers "Lambda-Runtime-Aws-Request-Id" with
-  | Some req_id -> Lwt.return (req_id, payload)
+  | Some req_id -> Lwt.return (req_id, body_json)
   | None -> Lwt.fail_with "Missing request ID"
 
 (* Function to send response to AWS Lambda *)

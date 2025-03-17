@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-    name               = "library_runtime"
+    name               = "unified_runtime"
     assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -21,16 +21,24 @@ resource "aws_iam_role_policy_attachment" "basic_execution_role_policy_attachmen
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+data "archive_file" "lambda_archive" {
+  type        = "zip"
+  source_file = "${path.module}/../code/dist/bootstrap"
+  output_path = "${path.module}/../code/dist/bootstrap.zip"
+}
+
 resource "aws_lambda_function" "lambda" {
-  function_name = "LibraryRuntime"
-
-  package_type = "Image"
-
+  filename      = data.archive_file.lambda_archive.output_path
+  function_name = "UnifiedRuntime"
   role          = aws_iam_role.lambda_role.arn
 
-  image_uri = "${aws_ecr_repository.cobol_library_runtime.repository_url}:latest"
+  handler = "bootstrap"
 
-  architectures = ["x86_64"]
+  source_code_hash = data.archive_file.lambda_archive.output_base64sha256
+
+  runtime = "provided.al2023"
+
+  architectures = ["arm64"]
 
   memory_size = 128
 }
