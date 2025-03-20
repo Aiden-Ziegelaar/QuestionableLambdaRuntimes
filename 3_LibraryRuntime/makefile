@@ -2,7 +2,7 @@ build-buildimage:
 	docker buildx build -t gnucobol-fedora:latest -f build.dockerfile . --progress=plain --platform linux/amd64
 
 build-function: build-buildimage
-	docker run --platform linux/amd64 --volume ./code:/code  gnucobol-fedora:latest /bin/bash /code/scripts/build.sh
+	docker run --platform linux/amd64 --volume ./code:/code --volume ./scripts:/scripts  gnucobol-fedora:latest /bin/bash /scripts/build.sh
 
 build-runimage: build-function
 	docker buildx build -t cobol_library_runtime:latest -f run.dockerfile . --progress=plain --platform linux/amd64

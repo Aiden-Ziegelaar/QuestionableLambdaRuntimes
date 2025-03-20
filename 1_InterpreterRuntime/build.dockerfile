@@ -1,0 +1,1 @@
+FROM ghcr.io/cargo-lambda/cargo-lambda

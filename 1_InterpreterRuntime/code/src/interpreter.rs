@@ -1,7 +1,8 @@
 use std::collections::HashMap;
+use std::num::Wrapping;
 
 pub fn brainf(input: String) -> String {
-    let mut memory = vec![0; 100];
+    let mut memory: Vec<Wrapping<u8>> = vec![std::num::Wrapping(0); 100];
     let mut pointer = 0;
     let mut output = String::new();
     let mut bracket_pairs: HashMap<usize, usize> = HashMap::new();
@@ -24,9 +25,9 @@ pub fn brainf(input: String) -> String {
             '<' => pointer -= 1,
             '+' => memory[pointer] += 1,
             '-' => memory[pointer] -= 1,
-            '.' => output.push(memory[pointer] as u8 as char),
+            '.' => output.push(memory[pointer].0 as u8 as char),
             ']' => {
-              if memory[pointer] != 0 {
+              if memory[pointer] != std::num::Wrapping(0) {
                 i = bracket_pairs[&i];
               } else {
                 i += 1;
@@ -46,9 +47,16 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_brainf() {
+    fn test_brainf_hello_world() {
         let input = String::from(">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.");
         let output = brainf(input);
         assert_eq!(output, "Hello, World!");
+    }
+
+    #[test]
+    fn test_brainf_sentence() {
+        let input = String::from("-[--->+<]>-.[---->+++++<]>-.+.++++++++++.+[---->+<]>+++.-[--->++<]>-.++++++++++.+[---->+<]>+++.[-->+++++++<]>.++.-------------.[--->+<]>---..+++++.-[---->+<]>++.+[->+++<]>.++++++++++++..---.[-->+<]>--------.");
+        let output = brainf(input);
+        assert_eq!(output, "This is pretty cool.");
     }
 }
