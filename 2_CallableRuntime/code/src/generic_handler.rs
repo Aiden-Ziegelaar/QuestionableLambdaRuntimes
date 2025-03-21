@@ -17,8 +17,7 @@ pub(crate) async fn function_handler(event: LambdaEvent<IncomingMessage>) -> Res
     let output = Command::new("/var/task/handler.out")
         .arg(event.payload.source)
         .arg(event.payload.target)
-        .output()
-        .expect("failed to execute process");
+        .output().unwrap();
 
     let resp = OutgoingMessage {
         distance: String::from_utf8(output.stdout).unwrap().trim().parse().unwrap(),
