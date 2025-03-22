@@ -18,9 +18,6 @@ tf-init:
 tf-plan:
 	terraform -chdir=./infra plan
 
-tf-replace-lambda:
-	terraform -chdir=./infra apply -replace=lambda.aws_lambda_function[\"lambda\"] --auto-approve 
-
 tf-apply:
 	terraform -chdir=./infra apply --auto-approve
 
