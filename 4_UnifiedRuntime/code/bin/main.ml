@@ -15,10 +15,10 @@ let get_next_invocation () =
   | None -> Lwt.fail_with "Missing request ID"
 
 let send_response request_id response_json =
-  let body = Yojson.Safe.to_string response_json in
+  let body = Yojson.Safe.to_string response_json |> Cohttp_lwt.Body.of_string in
   let headers = Cohttp.Header.init_with "Content-Type" "application/json" in
   Uri.of_string (runtime_base_url ^ "/invocation/" ^ request_id ^ "/response") |> 
-  Client.post ~body:(Cohttp_lwt.Body.of_string body) ~headers >>= fun _ ->
+  Client.post ~body ~headers >>= fun _ ->
   Lwt.return_unit
 
 let rec lambda_loop () =
@@ -27,6 +27,5 @@ let rec lambda_loop () =
   send_response request_id >>= fun () ->
   lambda_loop ()
 
-(* Start the runtime *)
 let () =
   Lwt_main.run (lambda_loop ())
