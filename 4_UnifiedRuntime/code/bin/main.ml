@@ -4,7 +4,6 @@ open Cohttp_lwt_unix
 let aws_runtime_api = Sys.getenv "AWS_LAMBDA_RUNTIME_API"
 let runtime_base_url = "http://" ^ aws_runtime_api ^ "/2018-06-01/runtime"
 
-(* Function to fetch the next Lambda invocation *)
 let get_next_invocation () =
   let uri = Uri.of_string (runtime_base_url ^ "/invocation/next") in
   Client.get uri >>= fun (resp, body) ->
@@ -15,7 +14,6 @@ let get_next_invocation () =
   | Some req_id -> Lwt.return (req_id, body_json)
   | None -> Lwt.fail_with "Missing request ID"
 
-(* Function to send response to AWS Lambda *)
 let send_response request_id response_json =
   let uri = Uri.of_string (runtime_base_url ^ "/invocation/" ^ request_id ^ "/response") in
   let body = Yojson.Safe.to_string response_json in
@@ -23,7 +21,6 @@ let send_response request_id response_json =
   Client.post ~body:(Cohttp_lwt.Body.of_string body) ~headers uri >>= fun _ ->
   Lwt.return_unit
 
-(* Main loop to continuously fetch and process Lambda events *)
 let rec lambda_loop () =
   get_next_invocation () >>= fun (request_id, event_body) ->
   let response = UnifiedRuntime.handler event_body in

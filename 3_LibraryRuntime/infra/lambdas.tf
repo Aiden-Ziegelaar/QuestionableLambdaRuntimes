@@ -24,13 +24,13 @@ resource "aws_iam_role_policy_attachment" "basic_execution_role_policy_attachmen
 resource "aws_lambda_function" "lambda" {
   function_name = "LibraryRuntime"
 
-  package_type = "Image"
+  package_type  = "Image"
 
   role          = aws_iam_role.lambda_role.arn
 
-  image_uri = "${aws_ecr_repository.cobol_library_runtime.repository_url}:latest"
+  image_uri     = "${aws_ecr_repository.cobol_library_runtime.repository_url}:latest"
 
   architectures = ["x86_64"]
 
-  memory_size = 128
+  memory_size   = 128
 }
