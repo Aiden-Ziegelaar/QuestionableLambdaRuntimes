@@ -8,15 +8,15 @@ let get_next_invocation () =
   Uri.of_string (runtime_base_url ^ "/invocation/next") |>
   Client.get >>= fun (resp, body) ->
   Cohttp_lwt.Body.to_string body >>= fun body_str ->
-  let headers = Cohttp.Response.headers resp in
+  let req_id = Cohttp.Header.get (Cohttp.Response.headers resp) "Lambda-Runtime-Aws-Request-Id" in
   let body_json = Yojson.Safe.from_string body_str in
-  match Cohttp.Header.get headers "Lambda-Runtime-Aws-Request-Id" with
+  match req_id with
   | Some req_id -> Lwt.return (req_id, body_json)
   | None -> Lwt.fail_with "Missing request ID"
 
 let send_response request_id response_json =
-  let body = Yojson.Safe.to_string response_json |> Cohttp_lwt.Body.of_string in
   let headers = Cohttp.Header.init_with "Content-Type" "application/json" in
+  let body = Yojson.Safe.to_string response_json |> Cohttp_lwt.Body.of_string in
   Uri.of_string (runtime_base_url ^ "/invocation/" ^ request_id ^ "/response") |> 
   Client.post ~body ~headers >>= fun _ ->
   Lwt.return_unit
